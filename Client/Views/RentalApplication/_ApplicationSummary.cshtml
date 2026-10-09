@@ -1,0 +1,119 @@
+@model RentalApplicationModel
+
+<h4 class="fw-bold mb-1">
+    Application Summary
+</h4>
+
+<p class="text-muted mb-4">
+    Please review your information before submitting.
+</p>
+
+
+<!-- Applicant -->
+<div class="card bg-light border mb-4">
+
+    <div class="card-body">
+
+        <div class="d-flex justify-content-between mb-3">
+
+            <h5 class="fw-bold mb-0">
+                Applicant Information
+            </h5>
+
+        </div>
+
+        <div class="row g-3">
+
+            <div class="col-md-6">
+                <small class="text-muted">Name</small>
+                <div class="fw-semibold">
+                    @Model.Applicant.FirstName
+                    @Model.Applicant.LastName
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <small class="text-muted">Phone</small>
+                <div class="fw-semibold">
+                    @Model.Applicant.PhoneNumber
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <small class="text-muted">Email</small>
+                <div class="fw-semibold">
+                    @Model.Applicant.Email
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <small class="text-muted">Address</small>
+                <div class="fw-semibold">
+                    @Model.Applicant.Address
+                </div>
+            </div>
+
+            <div class="col-12">
+                <div class="fw-semibold">
+                    @Model.Applicant.City,
+                    @Model.Applicant.State
+                    @Model.Applicant.ZipCode
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- Residence History -->
+<div class="card bg-light border">
+
+    <div class="card-body">
+
+        <h5 class="fw-bold mb-3">
+            Residence History
+        </h5>
+
+        @foreach (var residence in Model.ResidenceHistory)
+        {
+            <div class="border-bottom py-3">
+
+                <div class="fw-semibold">
+                    @residence.Address
+                </div>
+
+                <div class="text-muted small">
+                    @residence.LandlordName
+                    ·
+                    @residence.LandlordPhone
+                </div>
+
+                <div class="text-muted small mt-1">
+
+                    @residence.MoveInDate.ToString("MM/dd/yyyy")
+                    -
+                    @(residence.MoveOutDate.HasValue
+                        ? residence.MoveOutDate.Value.ToString("MM/dd/yyyy")
+                        : "Present")
+
+                </div>
+
+            </div>
+        }
+
+    </div>
+
+</div>
+
+
+<div class="alert alert-info mt-4 mb-0">
+
+    <i class="bi bi-info-circle me-2"></i>
+
+    By clicking <strong>Submit Application</strong>,
+    you confirm that the information provided is accurate.
+
+</div>

@@ -1,0 +1,176 @@
+@model RentalApplicationModel
+
+@{
+    ViewData["Title"] = "Rental Application";
+}
+
+<div class="container py-5">
+
+    <div class="row justify-content-center">
+
+        <div class="col-12 col-lg-8">
+
+            <!-- Header -->
+            <div class="text-center mb-4">
+
+                <h2 class="fw-bold">
+                    Rental Application
+                </h2>
+
+                <p class="text-muted mb-0">
+                    Complete the application for this rental unit.
+                </p>
+
+            </div>
+
+
+            <!-- Progress -->
+            <div class="d-flex align-items-center mb-4">
+
+                <div class="text-center">
+
+                    <div class="rounded-circle mx-auto
+                        @(Model.CurrentStep >= 1
+ ? "bg-primary text-white"
+ : "bg-light text-muted")" style="width:42px;height:42px;
+                        display:flex;
+                        align-items:center;
+                        justify-content:center;">
+                        1
+                    </div>
+
+                    <small class="fw-semibold">
+                        Applicant
+                    </small>
+
+                </div>
+
+
+                <div class="flex-grow-1 mx-2">
+                    <hr />
+                </div>
+
+
+                <div class="text-center">
+
+                    <div class="rounded-circle mx-auto
+                        @(Model.CurrentStep >= 2
+ ? "bg-primary text-white"
+ : "bg-light text-muted")" style="width:42px;height:42px;
+                        display:flex;
+                        align-items:center;
+                        justify-content:center;">
+                        2
+                    </div>
+
+                    <small class="fw-semibold">
+                        Residence History
+                    </small>
+
+                </div>
+
+
+                <div class="flex-grow-1 mx-2">
+                    <hr />
+                </div>
+
+
+                <div class="text-center">
+
+                    <div class="rounded-circle mx-auto
+                        @(Model.CurrentStep >= 3
+ ? "bg-primary text-white"
+ : "bg-light text-muted")" style="width:42px;height:42px;
+                        display:flex;
+                        align-items:center;
+                        justify-content:center;">
+                        3
+                    </div>
+
+                    <small class="fw-semibold">
+                        Summary
+                    </small>
+
+                </div>
+
+            </div>
+
+
+            <!-- Application Card -->
+            <div class="card border-0 shadow-sm">
+
+                <div class="card-body p-4 p-md-5">
+
+                    <form asp-action="Index" method="post">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" asp-for="RentalUnitId" />
+                        <input type="hidden" asp-for="CurrentStep" />
+
+                        @if (Model.CurrentStep == 1)
+                        {
+                            <!-- Applicant Information -->
+                            <partial name="_ApplicantInformation" for="Applicant" />
+                        }
+                        else if (Model.CurrentStep == 2)
+                        {
+                            <!-- Residence History -->
+                            <partial name="_ResidenceHistory" for="ResidenceHistory" />
+                        }
+                        else if (Model.CurrentStep == 3)
+                        {
+                            <!-- Summary -->
+                            <partial name="_ApplicationSummary" model="Model" />
+                        }
+
+                        <!-- Validation -->
+                        <div asp-validation-summary="ModelOnly" class="text-danger mt-3">
+                        </div>
+
+                        <!-- Buttons -->
+                        <div class="d-flex justify-content-between
+                            border-top pt-4 mt-4">
+
+                            @if (Model.CurrentStep > 1)
+                            {
+                                <button type="submit" name="action" value="back" class="btn btn-outline-secondary">
+                                    <i class="bi bi-arrow-left me-1"></i>
+                                    Back
+                                </button>
+                            }
+                            else
+                            {
+                                <a asp-controller="RentalProperties" asp-action="Index" class="btn btn-outline-secondary">
+                                    Cancel
+                                </a>
+                            }
+
+                            @if (Model.CurrentStep < 3)
+                            {
+                                <button type="submit" name="action" value="continue" class="btn btn-primary">
+                                    Continue
+                                    <i class="bi bi-arrow-right ms-1"></i>
+                                </button>
+                            }
+                            else
+                            {
+                                <button type="submit" name="action" value="submit" class="btn btn-success">
+                                    <i class="bi bi-check-lg me-1"></i>
+                                    Submit Application
+                                </button>
+                            }
+                        </div>
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -1,0 +1,106 @@
+@model List<ResidenceHistoryModel>
+
+<h4 class="fw-bold mb-1">
+    Residence History
+</h4>
+
+<p class="text-muted mb-4">
+    Please provide your previous residences.
+</p>
+
+@if (Model.Count == 0)
+{
+    <div class="alert alert-light border">
+        <i class="bi bi-info-circle me-2"></i>
+        No previous residences have been added.
+    </div>
+}
+
+@for (var i = 0; i < Model.Count; i++)
+{
+    <div class="card bg-light border mb-4">
+
+        <div class="card-body">
+
+            <div class="d-flex justify-content-between mb-3">
+
+                <h6 class="fw-bold mb-0">
+                    Previous Residence @(i + 1)
+                </h6>
+
+            </div>
+
+
+            <div class="row g-3">
+
+                <div class="col-12">
+
+                    <label class="form-label">
+                        Address
+                    </label>
+
+                    <input asp-for="@Model[i].Address" class="form-control" />
+
+                </div>
+
+
+                <div class="col-md-6">
+
+                    <label class="form-label">
+                        Landlord Name
+                    </label>
+
+                    <input asp-for="@Model[i].LandlordName" class="form-control" />
+
+                </div>
+
+
+                <div class="col-md-6">
+
+                    <label class="form-label">
+                        Landlord Phone
+                    </label>
+
+                    <input asp-for="@Model[i].LandlordPhone" class="form-control" />
+
+                </div>
+
+
+                <div class="col-md-6">
+
+                    <label class="form-label">
+                        Move-in Date
+                    </label>
+
+                    <input asp-for="@Model[i].MoveInDate" type="date" class="form-control" />
+
+                </div>
+
+
+                <div class="col-md-6">
+
+                    <label class="form-label">
+                        Move-out Date
+                    </label>
+
+                    <input asp-for="@Model[i].MoveOutDate" type="date" class="form-control" />
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+}
+
+
+@if (Model.Count < 5)
+{
+    <button type="button" class="btn btn-outline-primary">
+
+        <i class="bi bi-plus-lg me-1"></i>
+        Add Previous Residence
+
+    </button>
+}

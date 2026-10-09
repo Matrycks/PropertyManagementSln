@@ -1,0 +1,30 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Client (MVC)",
+      "type": "coreclr",
+      "request": "launch",
+      "preLaunchTask": "build",
+      "program": "${workspaceFolder}/Client/bin/Debug/net10.0/Client.dll",
+      "args": [],
+      "cwd": "${workspaceFolder}/Client",
+      "stopAtEntry": false,
+      "console": "internalConsole",
+      "env": {
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "ASPNETCORE_URLS": "http://localhost:5258"
+      },
+      "serverReadyAction": {
+        "action": "openExternally",
+        "pattern": "\\bNow listening on:\\s+(https?://\\S+)"
+      }
+    },
+    {
+      "name": "Client.Tests (run)",
+      "type": "node-terminal",
+      "request": "launch",
+      "command": "dotnet test \"${workspaceFolder}/Client.Tests/Client.Tests.csproj\""
+    }
+  ]
+}

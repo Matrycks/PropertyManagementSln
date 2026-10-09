@@ -1,0 +1,16 @@
+# Build outputs
+**/bin/
+**/obj/
+
+# Visual Studio
+.vs/
+*.suo
+*.user
+*.userosscache
+
+# Test results and coverage
+TestResults/
+coverage/
+
+# macOS
+.DS_Store
