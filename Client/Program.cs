@@ -6,6 +6,10 @@ using Microsoft.EntityFrameworkCore;
 using Client.Data.DbContexts;
 using Client.Data.Entities;
 using Client.Data;
+using Client.Data.Interfaces;
+using Client.Data.Repositories;
+using Client.Services.Interfaces;
+using Client.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -42,6 +46,11 @@ config.Scan(Assembly.GetExecutingAssembly());
 // Register the config and Mapster's IMapper service with DI
 builder.Services.AddSingleton(config);
 builder.Services.AddScoped<IMapper, ServiceMapper>();
+
+builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+builder.Services.AddScoped<IRentalPropertyService, RentalPropertyService>();
+builder.Services.AddScoped<IRentalUnitService, RentalUnitService>();
 
 var app = builder.Build();
 
@@ -89,6 +98,7 @@ if (app.Environment.IsDevelopment())
 
         await DataSeeder.SeedProperties(context);
         await DataSeeder.SeedFloorPlans(context);
+        await DataSeeder.SeedRentalUnits(context);
 
         logger.LogInformation("Database seeding completed successfully.");
     }

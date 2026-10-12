@@ -39,7 +39,7 @@
                         Address
                     </label>
 
-                    <input asp-for="@Model[i].Address" class="form-control" />
+                    @Html.TextBoxFor(model => model[i].Address, new { @class = "form-control" })
 
                 </div>
 
@@ -50,7 +50,7 @@
                         Landlord Name
                     </label>
 
-                    <input asp-for="@Model[i].LandlordName" class="form-control" />
+                    @Html.TextBoxFor(model => model[i].LandlordName, new { @class = "form-control" })
 
                 </div>
 
@@ -61,7 +61,7 @@
                         Landlord Phone
                     </label>
 
-                    <input asp-for="@Model[i].LandlordPhone" class="form-control" />
+                    @Html.TextBoxFor(model => model[i].LandlordPhone, new { @class = "form-control" })
 
                 </div>
 
@@ -72,7 +72,7 @@
                         Move-in Date
                     </label>
 
-                    <input asp-for="@Model[i].MoveInDate" type="date" class="form-control" />
+                    @Html.TextBoxFor(model => model[i].MoveInDate, "{0:yyyy-MM-dd}", new { type = "date", @class = "form-control" })
 
                 </div>
 
@@ -83,7 +83,7 @@
                         Move-out Date
                     </label>
 
-                    <input asp-for="@Model[i].MoveOutDate" type="date" class="form-control" />
+                    @Html.TextBoxFor(model => model[i].MoveOutDate, "{0:yyyy-MM-dd}", new { type = "date", @class = "form-control" })
 
                 </div>
 
@@ -97,10 +97,10 @@
 
 @if (Model.Count < 5)
 {
-    <button type="button" class="btn btn-outline-primary">
+    @* <button type="button" class="btn btn-outline-primary">
 
         <i class="bi bi-plus-lg me-1"></i>
         Add Previous Residence
 
-    </button>
+    </button> *@
 }

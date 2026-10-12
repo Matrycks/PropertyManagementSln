@@ -109,5 +109,26 @@ namespace Client.Data
             context.FloorPlans.AddRange(fakeFloorPlans);
             await context.SaveChangesAsync();
         }
+
+        public static async Task SeedRentalUnits(ClientContext context)
+        {
+            if (context.RentalUnits.Any())
+            {
+                return;
+            }
+
+            var rentalUnitFaker = new Faker<RentalUnit>()
+                .UseSeed(42) // Ensure consistent data generation across runs
+                .RuleFor(ru => ru.UnitNumber, f => f.Random.Int(1, 100).ToString())
+                .RuleFor(ru => ru.FloorPlanId, f => f.Random.Int(1, 5))
+                .RuleFor(ru => ru.RentalPropertyId, f => f.Random.Int(1, 2))
+                .RuleFor(ru => ru.IsOccupied, f => f.Random.Bool(0.8f));
+
+            // Generate 10 rental unit records
+            var fakeRentalUnits = rentalUnitFaker.Generate(3);
+
+            context.RentalUnits.AddRange(fakeRentalUnits);
+            await context.SaveChangesAsync();
+        }
     }
 }

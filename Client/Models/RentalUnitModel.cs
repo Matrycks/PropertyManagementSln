@@ -19,5 +19,6 @@ namespace Client.Models
 
         [Required]
         public decimal Rent { get; set; }
+        public bool IsOccupied { get; set; }
     }
 }

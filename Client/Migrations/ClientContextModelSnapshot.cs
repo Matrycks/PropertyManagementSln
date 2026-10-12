@@ -247,6 +247,9 @@ namespace Client.Migrations
                     b.Property<int>("FloorPlanId")
                         .HasColumnType("int");
 
+                    b.Property<bool>("IsOccupied")
+                        .HasColumnType("bit");
+
                     b.Property<decimal>("Rent")
                         .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");

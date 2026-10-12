@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Client.Data.DbContexts;
 using Client.Models;
+using Client.Services.Interfaces;
 
 namespace Client.Controllers;
 
@@ -15,62 +16,114 @@ namespace Client.Controllers;
 public class RentalPropertyController : Controller
 {
     private readonly ILogger<RentalPropertyController> _logger;
-    private readonly ClientContext _context;
+    private readonly IRentalPropertyService _rentalPropertyService;
     private readonly IMapper _mapper;
 
     public RentalPropertyController(ILogger<RentalPropertyController> logger,
-    ClientContext context, IMapper mapper)
+    IRentalPropertyService rentalPropertyService, IMapper mapper)
     {
         _logger = logger;
-        _context = context;
+        _rentalPropertyService = rentalPropertyService;
         _mapper = mapper;
     }
 
-    public IActionResult Index()
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Create(RentalPropertyModel nProperty)
     {
-        return View();
-    }
-
-    public IActionResult RentalProperties()
-    {
-        // Get the list of rental properties from the database
-        // TODO: use a service to get the properties instead of directly accessing the context
-        var properties = _context.RentalProperties.ToList();
-        var propertyViewModels = _mapper.Map<List<RentalPropertyModel>>(properties);
-        return View(propertyViewModels);
-    }
-
-    // GET: /FloorPlans
-    public IActionResult FloorPlans()
-    {
-        var floorPlans = new List<FloorPlanModel>
+        if (!ModelState.IsValid)
         {
-            new FloorPlanModel
-            {
-                Name = "The Aspen",
-                Bedrooms = 2,
-                Bathrooms = 2,
-                SquareFeet = 1200,
-                Rent = 1500.00m
-            },
-            new FloorPlanModel
-            {
-                Name = "The Birch",
-                Bedrooms = 3,
-                Bathrooms = 2,
-                SquareFeet = 1500,
-                Rent = 1800.00m
-            },
-            new FloorPlanModel
-            {
-                Name = "The Cedar",
-                Bedrooms = 1,
-                Bathrooms = 1,
-                SquareFeet = 800,
-                Rent = 1200.00m
-            }
-        };
+            TempData["Error"] = "Please provide valid property details.";
+            return RedirectToAction("RentalProperties");
+        }
 
-        return View("FloorPlans", floorPlans);
+        try
+        {
+            await _rentalPropertyService.CreatePropertyAsync(nProperty);
+            TempData["Success"] = $"Property {nProperty.Name} created successfully.";
+
+            return RedirectToAction("RentalProperties");
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex.Message, ex);
+            TempData["Error"] = "Error creating property.";
+
+            return RedirectToAction("RentalProperties");
+        }
+    }
+
+    // GET: List of all rental properties
+    public async Task<IActionResult> RentalProperties()
+    {
+        var properties = await _rentalPropertyService.GetAllPropertiesAsync();
+        return View(properties);
+    }
+
+    // GET: Details of a specific rental property
+    public async Task<IActionResult> RentalPropertyDetails(int propertyId)
+    {
+        var property = await _rentalPropertyService.GetPropertyByIdAsync(propertyId);
+        if (property == null)
+        {
+            return NotFound();
+        }
+
+        return View(property);
+    }
+
+    // GET: Property details for edit form
+    [HttpGet]
+    public async Task<IActionResult> RentalPropertyDetailsForEdit(int propertyId)
+    {
+        var property = await _rentalPropertyService.GetPropertyByIdAsync(propertyId);
+        if (property == null)
+        {
+            return NotFound();
+        }
+
+        return Json(property);
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Edit(RentalPropertyModel property)
+    {
+        if (!ModelState.IsValid)
+        {
+            TempData["Error"] = "Please provide valid property details.";
+            return RedirectToAction("RentalProperties");
+        }
+
+        try
+        {
+            await _rentalPropertyService.UpdatePropertyAsync(property);
+            TempData["Success"] = $"Property {property.Name} updated successfully.";
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex.Message, ex);
+            TempData["Error"] = "Error editing property.";
+        }
+
+        return RedirectToAction("RentalProperties");
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Delete(int propertyId)
+    {
+        try
+        {
+            await _rentalPropertyService.DeletePropertyAsync(propertyId);
+            TempData["Success"] = $"Property deleted successfully.";
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex.Message, ex);
+            TempData["Error"] = "Error deleting property.";
+        }
+
+        return RedirectToAction("RentalProperties");
     }
 }

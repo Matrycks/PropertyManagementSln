@@ -14,5 +14,6 @@ namespace Client.Data.Entities
         public FloorPlan FloorPlan { get; set; } = null!;
         public string UnitNumber { get; set; } = null!;
         public decimal Rent { get; set; }
+        public bool IsOccupied { get; set; }
     }
 }
