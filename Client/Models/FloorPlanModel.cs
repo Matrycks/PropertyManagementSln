@@ -7,7 +7,7 @@ namespace Client.Models
 {
     public class FloorPlanModel
     {
-        public int FloorPlanModelId { get; set; }
+        public int FloorPlanId { get; set; }
         public string PictureUrl { get; set; } = null!;
         public string Name { get; set; } = null!;
         public int Bedrooms { get; set; }

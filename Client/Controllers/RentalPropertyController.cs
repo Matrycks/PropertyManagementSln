@@ -46,7 +46,7 @@ public class RentalPropertyController : Controller
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex.Message, ex);
+            _logger.LogError(ex, "Error creating property.");
             TempData["Error"] = "Error creating property.";
 
             return RedirectToAction("RentalProperties");
@@ -79,7 +79,10 @@ public class RentalPropertyController : Controller
         var property = await _rentalPropertyService.GetPropertyByIdAsync(propertyId);
         if (property == null)
         {
-            return NotFound();
+            return BadRequest(new
+            {
+                message = "Property doesn't exist."
+            });
         }
 
         return Json(property);
@@ -102,7 +105,7 @@ public class RentalPropertyController : Controller
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex.Message, ex);
+            _logger.LogError(ex, "Error editing property.");
             TempData["Error"] = "Error editing property.";
         }
 
@@ -120,7 +123,7 @@ public class RentalPropertyController : Controller
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex.Message, ex);
+            _logger.LogError(ex, "Error deleting property.");
             TempData["Error"] = "Error deleting property.";
         }
 

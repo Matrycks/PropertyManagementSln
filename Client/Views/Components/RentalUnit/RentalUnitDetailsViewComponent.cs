@@ -10,6 +10,7 @@ namespace Client.Views.Components.RentalProperty
 {
     public class RentalUnitDetailsViewComponent : ViewComponent
     {
+        //private readonly I
         public async Task<IViewComponentResult> InvokeAsync(RentalUnitModel? rentalUnit)
         {
             if (rentalUnit == null)
@@ -17,7 +18,7 @@ namespace Client.Views.Components.RentalProperty
                 return Content("Rental unit not found.");
             }
 
-            return View("~/Views/Shared/Components/RentalProperty/RentalUnitDetails.cshtml", rentalUnit);
+            return View("~/Views/Shared/Components/RentalUnit/RentalUnitDetails.cshtml", rentalUnit);
         }
     }
 }

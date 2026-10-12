@@ -23,8 +23,7 @@ public class FloorPlanController : Controller
         _mapper = mapper;
     }
 
-    // GET: /FloorPlans
-    public IActionResult FloorPlans()
+    public IActionResult List()
     {
         // Get the list of floor plans from the database
         // TODO: use a service to get the floor plans instead of directly accessing the context
@@ -32,5 +31,13 @@ public class FloorPlanController : Controller
         var floorPlanViewModels = _mapper.Map<List<FloorPlanModel>>(floorPlans);
 
         return View("FloorPlans", floorPlanViewModels);
+    }
+
+    public IActionResult ListOptions()
+    {
+        var floorPlans = _context.FloorPlans.ToList();
+        var floorPlanViewModels = _mapper.Map<List<FloorPlanModel>>(floorPlans);
+
+        return Json(floorPlanViewModels);
     }
 }

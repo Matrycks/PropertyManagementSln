@@ -133,7 +133,7 @@ public class RentalPropertyControllerTests
     }
 
     [Fact]
-    public async Task RentalPropertyDetailsForEdit_WhenPropertyDoesNotExist_ReturnsNotFound()
+    public async Task RentalPropertyDetailsForEdit_WhenPropertyDoesNotExist_ReturnsBadRequest()
     {
         const int propertyId = 17;
         _rentalPropertyService
@@ -142,7 +142,10 @@ public class RentalPropertyControllerTests
 
         var result = await _controller.RentalPropertyDetailsForEdit(propertyId);
 
-        Assert.IsType<NotFoundResult>(result);
+        var badRequest = Assert.IsType<BadRequestObjectResult>(result);
+        Assert.Equal(
+            "Property doesn't exist.",
+            badRequest.Value?.GetType().GetProperty("message")?.GetValue(badRequest.Value));
     }
 
     [Fact]

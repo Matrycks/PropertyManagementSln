@@ -9,10 +9,12 @@ namespace Client.Models
     public class RentalUnitModel
     {
         public int RentalUnitId { get; set; }
+
+        [Required]
         public int RentalPropertyId { get; set; }
 
         public int FloorPlanId { get; set; }
-        public FloorPlanModel FloorPlan { get; set; } = null!;
+        public FloorPlanModel? FloorPlan { get; set; }
 
         [Required]
         public string UnitNumber { get; set; } = null!;
