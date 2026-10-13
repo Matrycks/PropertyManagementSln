@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Client.Data.DbContexts;
 using Client.Data.Entities;
 using Client.Models;
+using Client.Services.Interfaces;
 
 namespace Client.Controllers;
 
@@ -18,15 +19,15 @@ namespace Client.Controllers;
 public class RentalApplicationController : Controller
 {
     private readonly ILogger<RentalApplicationController> _logger;
-    private readonly ClientContext _context;
+    private readonly IRentalApplicationService _rentalApplicationService;
     private readonly IMapper _mapper;
     private readonly UserManager<ApplicationUser> _userManager;
 
     public RentalApplicationController(ILogger<RentalApplicationController> logger,
-    ClientContext context, IMapper mapper, UserManager<ApplicationUser> userManager)
+        IRentalApplicationService rentalApplicationService, IMapper mapper, UserManager<ApplicationUser> userManager)
     {
         _logger = logger;
-        _context = context;
+        _rentalApplicationService = rentalApplicationService;
         _mapper = mapper;
         _userManager = userManager;
     }
@@ -42,6 +43,7 @@ public class RentalApplicationController : Controller
         }
 
         var applicant = _mapper.Map<ApplicantModel>(currentUser);
+        applicant.UserId = currentUser.Id;
 
         return View(new RentalApplicationModel
         {
@@ -54,26 +56,56 @@ public class RentalApplicationController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Index(RentalApplicationModel model, string action)
     {
-        switch (action.ToLowerInvariant())
+        try
         {
-            case "continue":
-                model.CurrentStep++;
+            switch (action.ToLowerInvariant())
+            {
+                case "continue":
+                    model.CurrentStep++;
 
-                ModelState.Clear();
-                return View(model);
-            case "back":
-                model.CurrentStep--;
+                    // validate current section.
+                    if (!await ValidateCurrentSectionAsync(model))
+                    {
+                        return View(model);
+                    }
 
-                ModelState.Clear();
-                return View(model);
-            case "submit":
-                // Save the application to the database
-                var rentalApplicationEntity = _mapper.Map<RentalApplication>(model);
-                _context.RentalApplications.Add(rentalApplicationEntity);
-                await _context.SaveChangesAsync();
-                return RedirectToAction("Confirmation");
+                    ModelState.Clear();
+                    return View(model);
+                case "back":
+                    model.CurrentStep--;
+
+                    ModelState.Clear();
+                    return View(model);
+                case "submit":
+                    // Save the application to the database
+                    //await _rentalApplicationService.CreateApplicationAsync(model);
+
+                    return RedirectToAction("Confirmation");
+                default:
+                    return BadRequest();
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error processing application.");
+            TempData["Error"] = "Error processing application.";
+
+            return BadRequest();
+        }
+    }
+
+    private async Task<bool> ValidateCurrentSectionAsync(RentalApplicationModel model)
+    {
+        return true; // For now
+
+        switch (model.CurrentStep)
+        {
+            // TODO: handle validation
+            case 1:
+                break;
+
             default:
-                return BadRequest();
+                return false;
         }
     }
 }

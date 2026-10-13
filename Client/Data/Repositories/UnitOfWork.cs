@@ -13,6 +13,7 @@ namespace Client.Data.Repositories
         private readonly ClientContext _context;
         private IGenericRepository<RentalProperty>? _rentalProperties;
         private IGenericRepository<RentalUnit>? _rentalUnits;
+        private IGenericRepository<RentalApplication>? _rentalApplications;
 
         public UnitOfWork(ClientContext context)
         {
@@ -34,6 +35,15 @@ namespace Client.Data.Repositories
             {
                 _rentalUnits ??= new GenericRepository<RentalUnit>(_context);
                 return _rentalUnits;
+            }
+        }
+
+        public IGenericRepository<RentalApplication> RentalApplications
+        {
+            get
+            {
+                _rentalApplications ??= new GenericRepository<RentalApplication>(_context);
+                return _rentalApplications;
             }
         }
 

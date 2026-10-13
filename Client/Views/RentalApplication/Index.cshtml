@@ -1,4 +1,5 @@
 @model RentalApplicationModel
+@inject Microsoft.AspNetCore.Mvc.ViewFeatures.IFileVersionProvider FileVersionProvider
 
 @{
     ViewData["Title"] = "Rental Application";
@@ -106,8 +107,7 @@
                         <input type="hidden" asp-for="RentalUnitId" />
                         <input type="hidden" asp-for="CurrentStep" />
 
-                        @if (Model.CurrentStep == 1)
-                        {
+                        <div class="step @(Model.CurrentStep == 1 ? "" : "d-none")">
                             <!-- Applicant Information -->
                             @await Html.PartialAsync(
                                 "_ApplicantInformation",
@@ -116,23 +116,19 @@
                                 {
                                     TemplateInfo = { HtmlFieldPrefix = nameof(Model.Applicant) }
                                 })
-                        }
-                        else if (Model.CurrentStep == 2)
-                        {
+                        </div>
+
+                        <div class="step @(Model.CurrentStep == 2 ? "" : "d-none")">
                             <!-- Residence History -->
                             @await Html.PartialAsync(
                                 "_ResidenceHistory",
-                                Model.ResidenceHistory,
-                                new Microsoft.AspNetCore.Mvc.ViewFeatures.ViewDataDictionary(ViewData)
-                                {
-                                    TemplateInfo = { HtmlFieldPrefix = nameof(Model.ResidenceHistory) }
-                                })
-                        }
-                        else if (Model.CurrentStep == 3)
-                        {
+                                Model.ResidenceHistory)
+                        </div>
+
+                        <div class="step @(Model.CurrentStep == 3 ? "" : "d-none")">
                             <!-- Summary -->
                             @await Html.PartialAsync("_ApplicationSummary", Model)
-                        }
+                        </div>
 
                         <!-- Validation -->
                         @Html.ValidationSummary(true, "", new { @class = "text-danger mt-3" })
@@ -182,6 +178,10 @@
 
 </div>
 
+
+
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+    <script
+    src="@FileVersionProvider.AddFileVersionToPath(Context.Request.PathBase, Url.Content("~/js/rental-application.js"))"></script>
 }

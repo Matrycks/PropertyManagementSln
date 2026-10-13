@@ -51,6 +51,7 @@ builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepositor
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IRentalPropertyService, RentalPropertyService>();
 builder.Services.AddScoped<IRentalUnitService, RentalUnitService>();
+builder.Services.AddScoped<IRentalApplicationService, RentalApplicationService>();
 
 var app = builder.Build();
 

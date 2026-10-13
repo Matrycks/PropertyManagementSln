@@ -10,6 +10,7 @@ namespace Client.Data.Interfaces
     {
         IGenericRepository<RentalProperty> RentalProperties { get; }
         IGenericRepository<RentalUnit> RentalUnits { get; }
+        IGenericRepository<RentalApplication> RentalApplications { get; }
         Task<int> CompleteAsync();
     }
 }
