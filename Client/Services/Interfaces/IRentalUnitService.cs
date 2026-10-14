@@ -11,6 +11,7 @@ namespace Client.Services.Interfaces
         Task<IEnumerable<RentalUnitModel>> GetAllAsync();
         Task<RentalUnitModel?> GetByIdAsync(int id);
         Task<IEnumerable<RentalUnitModel>> GetByPropertyIdAsync(int propertyId);
+        Task<IEnumerable<RentalUnitModel>> GetByPropertyIdAsync(int propertyId, int floorPlanId);
         Task<IEnumerable<RentalUnitModel>> GetAvailableAsync();
         Task CreateAsync(RentalUnitModel rentalUnit);
         Task UpdateAsync(RentalUnitModel rentalUnit);

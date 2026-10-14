@@ -50,5 +50,17 @@
                 </div>
             </div>
         }
+
+        @if (ViewBag.ShowActions == true)
+        {
+            <hr class="my-3" />
+
+            <div class="d-grid">
+                <a asp-controller="RentalApplication" asp-action="Index" asp-route-rentalUnitId="@Model.RentalUnitId"
+                   class="btn btn-primary">
+                    Start Application
+                </a>
+            </div>
+        }
     </div>
 </div>

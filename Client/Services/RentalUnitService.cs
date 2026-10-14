@@ -7,6 +7,7 @@ using Client.Data.Interfaces;
 using Client.Models;
 using Client.Services.Interfaces;
 using MapsterMapper;
+using Microsoft.EntityFrameworkCore;
 
 namespace Client.Services
 {
@@ -47,6 +48,16 @@ namespace Client.Services
         public async Task<IEnumerable<RentalUnitModel>> GetByPropertyIdAsync(int propertyId)
         {
             var rentalUnits = await _unitOfWork.RentalUnits.FindAsync(ru => ru.RentalPropertyId == propertyId);
+            return rentalUnits.Select(ru => _mapper.Map<RentalUnitModel>(ru));
+        }
+
+        public async Task<IEnumerable<RentalUnitModel>> GetByPropertyIdAsync(int propertyId, int floorPlanId)
+        {
+            var rentalUnits = await _unitOfWork.RentalUnits.Query()
+                .Include(x => x.FloorPlan)
+                .Where(ru => ru.RentalPropertyId == propertyId && ru.FloorPlanId == floorPlanId)
+                .ToListAsync();
+
             return rentalUnits.Select(ru => _mapper.Map<RentalUnitModel>(ru));
         }
 

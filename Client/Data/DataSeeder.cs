@@ -126,7 +126,7 @@ namespace Client.Data
                 .RuleFor(ru => ru.IsOccupied, f => f.Random.Bool(0.8f));
 
             // Generate 10 rental unit records
-            var fakeRentalUnits = rentalUnitFaker.Generate(3);
+            var fakeRentalUnits = rentalUnitFaker.Generate(10);
 
             context.RentalUnits.AddRange(fakeRentalUnits);
             await context.SaveChangesAsync();

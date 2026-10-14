@@ -30,10 +30,12 @@ namespace Client.Controllers
             _rentalUnitService = rentalUnitService;
         }
 
-        public async Task<IActionResult> ListView(int propertyId)
+        [AllowAnonymous]
+        [Authorize(Roles = "User, Manager")]
+        public async Task<IActionResult> List(int floorPlanId, int propertyId = 1) // NOTE: hardcoded until ui workflow is updated
         {
-            var units = await _rentalUnitService.GetByPropertyIdAsync(propertyId);
-            return ViewComponent("RentalUnits", units);
+            var units = await _rentalUnitService.GetByPropertyIdAsync(propertyId, floorPlanId);
+            return View("RentalUnits", units);
         }
 
         [HttpPost]

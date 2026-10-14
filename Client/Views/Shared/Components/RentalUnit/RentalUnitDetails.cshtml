@@ -35,13 +35,13 @@
             </div>
 
             <h6 class="text-muted mb-3">
-                @Model.FloorPlan.Name
+                @Model.FloorPlan?.Name
             </h6>
 
             <div class="row text-center mb-3">
                 <div class="col-4">
                     <strong>
-                        @Model.FloorPlan.Bedrooms
+                        @Model.FloorPlan?.Bedrooms
                     </strong>
                     <div class="small text-muted">
                         Bedrooms
@@ -50,7 +50,7 @@
 
                 <div class="col-4">
                     <strong>
-                        @Model.FloorPlan.Bathrooms
+                        @Model.FloorPlan?.Bathrooms
                     </strong>
                     <div class="small text-muted">
                         Bathrooms
@@ -59,7 +59,7 @@
 
                 <div class="col-4">
                     <strong>
-                        @Model.FloorPlan.SquareFeet.ToString("N0")
+                        @Model.FloorPlan?.SquareFeet.ToString("N0")
                     </strong>
                     <div class="small text-muted">
                         Sq. Ft.
@@ -84,7 +84,7 @@
                 </div>
 
                 <span class="badge bg-light text-dark">
-                    @Model.FloorPlan.Name
+                    @Model.FloorPlan?.Name
                 </span>
             </div>
 

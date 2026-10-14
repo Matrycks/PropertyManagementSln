@@ -1,0 +1,63 @@
+@model IEnumerable<RentalUnitModel>
+
+@{
+    ViewData["Title"] = "Rental Units";
+}
+
+<div class="container py-5">
+
+    <!-- Header -->
+    <div class="d-flex flex-column flex-md-row
+        justify-content-between
+        align-items-md-center mb-4">
+
+        <div>
+            <h2 class="fw-bold mb-1">Rental Units</h2>
+
+            <p class="text-muted mb-0">
+                Choose the apartment best for you.
+            </p>
+        </div>
+
+    </div>
+
+
+    @if (Model != null && Model.Any())
+    {
+        <div class="row g-4">
+
+            @foreach (var floorPlan in Model)
+            {
+                <div class="col-md-6 col-lg-4">
+                    @await Html.PartialAsync("_RentalUnitBasicDetails", floorPlan
+                        , new ViewDataDictionary(ViewData) { { "ShowActions", true } })
+                </div>
+            }
+
+        </div>
+    }
+    else
+    {
+        <!-- Empty State -->
+        <div class="card border-0 shadow-sm">
+
+            <div class="card-body text-center py-5">
+
+                <i class="bi bi-grid-3x3-gap
+                    text-muted" style="font-size: 5rem;">
+                </i>
+
+                <h4 class="mt-3">
+                    No Rental Units
+                </h4>
+
+                <p class="text-muted">
+                    There are currently no rental units available.
+                </p>
+
+            </div>
+
+        </div>
+    }
+
+</div>

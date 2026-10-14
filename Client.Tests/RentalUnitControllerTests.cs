@@ -28,20 +28,21 @@ public class RentalUnitControllerTests
     }
 
     [Fact]
-    public async Task ListView_ReturnsRentalUnitsViewComponentForProperty()
+    public async Task List_WhenCalled_ReturnsRentalUnitsViewForPropertyAndFloorPlan()
     {
         const int propertyId = 42;
+        const int floorPlanId = 9;
         var units = new[] { CreateRentalUnit(), CreateRentalUnit() };
         _rentalUnitService
-            .Setup(service => service.GetByPropertyIdAsync(propertyId))
+            .Setup(service => service.GetByPropertyIdAsync(propertyId, floorPlanId))
             .ReturnsAsync(units);
 
-        var result = await _controller.ListView(propertyId);
+        var result = await _controller.List(floorPlanId, propertyId);
 
-        var viewComponent = Assert.IsType<ViewComponentResult>(result);
-        Assert.Equal("RentalUnits", viewComponent.ViewComponentName);
-        Assert.Same(units, viewComponent.Arguments);
-        _rentalUnitService.Verify(service => service.GetByPropertyIdAsync(propertyId), Times.Once);
+        var view = Assert.IsType<ViewResult>(result);
+        Assert.Equal("RentalUnits", view.ViewName);
+        Assert.Same(units, view.Model);
+        _rentalUnitService.Verify(service => service.GetByPropertyIdAsync(propertyId, floorPlanId), Times.Once);
     }
 
     [Fact]

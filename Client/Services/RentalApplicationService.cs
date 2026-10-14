@@ -87,7 +87,7 @@ namespace Client.Services
             var application = await _unitOfWork.RentalApplications.Query()
                 .Include(x => x.ResidenceHistory)
                 .Include(x => x.RentalUnit)
-                .ThenInclude(x => x.FloorPlan)
+                .ThenInclude(x => x!.FloorPlan)
                 .SingleOrDefaultAsync(x => x.RentalApplicationId == id);
 
             return application != null ? _mapper.Map<RentalApplicationModel>(application) : null;
