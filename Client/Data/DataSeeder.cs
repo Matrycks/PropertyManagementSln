@@ -122,6 +122,7 @@ namespace Client.Data
                 .RuleFor(ru => ru.UnitNumber, f => f.Random.Int(1, 100).ToString())
                 .RuleFor(ru => ru.FloorPlanId, f => f.Random.Int(1, 5))
                 .RuleFor(ru => ru.RentalPropertyId, f => f.Random.Int(1, 2))
+                .RuleFor(ru => ru.Rent, f => f.Random.Decimal(1200m, 3200m))
                 .RuleFor(ru => ru.IsOccupied, f => f.Random.Bool(0.8f));
 
             // Generate 10 rental unit records

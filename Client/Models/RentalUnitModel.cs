@@ -14,7 +14,7 @@ namespace Client.Models
         public int RentalPropertyId { get; set; }
 
         public int FloorPlanId { get; set; }
-        public FloorPlanModel? FloorPlan { get; set; }
+        public FloorPlanModel FloorPlan { get; set; } = null!;
 
         [Required]
         public string UnitNumber { get; set; } = null!;

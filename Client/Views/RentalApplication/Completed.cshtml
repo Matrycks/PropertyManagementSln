@@ -1,0 +1,251 @@
+@model RentalApplicationModel
+
+<div class="container py-5">
+
+    <div class="row justify-content-center">
+
+        <div class="col-12 col-lg-8">
+
+            <!-- Header -->
+            <div class="text-center mb-4">
+
+                <div class="rounded-circle bg-success bg-opacity-10
+                    text-success mx-auto mb-3" style="width:72px;height:72px;
+                    display:flex;align-items:center;
+                    justify-content:center;">
+
+                    <i class="bi bi-check-lg" style="font-size:2.5rem;"></i>
+
+                </div>
+
+                <h2 class="fw-bold">
+                    Application Completed
+                </h2>
+
+                <p class="text-muted mb-0">
+                    Your rental application has been submitted successfully.
+                </p>
+
+            </div>
+
+
+            <!-- Application Card -->
+            <div class="card border-0 shadow-sm">
+
+                <div class="card-body p-4 p-md-5">
+
+                    <!-- Success Message -->
+                    <div class="alert alert-success d-flex align-items-start mb-4" role="alert">
+
+                        <i class="bi bi-check-circle-fill me-2 mt-1"></i>
+
+                        <div>
+                            <strong>Thank you for applying!</strong>
+                            <div>
+                                Your application has been received.
+                                Please keep an eye on your email for updates.
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                    <!-- Rental Unit -->
+                    <h5 class="fw-bold mb-3">
+                        <i class="bi bi-house-door me-2"></i>
+                        Rental Unit
+                    </h5>
+
+                    <div class="bg-light rounded p-3 mb-4">
+
+                        @if (Model.RentalUnit != null)
+                        {
+                            @await Html.PartialAsync("~/Views/RentalUnit/_RentalUnitBasicDetails.cshtml", Model.RentalUnit)
+                        }
+                        else
+                        {
+                            <p class="text-muted mb-0">
+                                Rental unit information is unavailable.
+                            </p>
+                        }
+
+                    </div>
+
+
+                    <!-- Applicant Information -->
+                    <h5 class="fw-bold mb-3">
+                        <i class="bi bi-person me-2"></i>
+                        Applicant Information
+                    </h5>
+
+                    <div class="row g-3 mb-4">
+
+                        <div class="col-md-6">
+                            <label class="form-label text-muted small">
+                                First Name
+                            </label>
+                            <div class="fw-semibold">
+                                @Model.FirstName
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label text-muted small">
+                                Last Name
+                            </label>
+                            <div class="fw-semibold">
+                                @Model.LastName
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label text-muted small">
+                                Phone
+                            </label>
+                            <div class="fw-semibold">
+                                @Model.PhoneNumber
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label text-muted small">
+                                Email
+                            </label>
+                            <div class="fw-semibold">
+                                @Model.Email
+                            </div>
+                        </div>
+
+                        <div class="col-12">
+                            <label class="form-label text-muted small">
+                                Current Address
+                            </label>
+                            <div class="fw-semibold">
+                                @Model.Address
+                            </div>
+                        </div>
+
+                        <div class="col-md-5">
+                            <label class="form-label text-muted small">
+                                City
+                            </label>
+                            <div class="fw-semibold">
+                                @Model.City
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <label class="form-label text-muted small">
+                                State
+                            </label>
+                            <div class="fw-semibold">
+                                @Model.State
+                            </div>
+                        </div>
+
+                        <div class="col-md-3">
+                            <label class="form-label text-muted small">
+                                ZIP Code
+                            </label>
+                            <div class="fw-semibold">
+                                @Model.ZipCode
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                    <!-- Residence History -->
+                    <h5 class="fw-bold mb-3">
+                        <i class="bi bi-clock-history me-2"></i>
+                        Residence History
+                    </h5>
+
+                    @if (Model.ResidenceHistory != null &&
+                         Model.ResidenceHistory.Any())
+                    {
+                        @foreach (var residence in Model.ResidenceHistory)
+                        {
+                            <div class="border rounded p-3 mb-3">
+
+                                <div class="fw-semibold mb-2">
+                                    @residence.Address
+                                </div>
+
+                                <div class="row g-2">
+
+                                    <div class="col-md-6">
+                                        <small class="text-muted">
+                                            City
+                                        </small>
+                                        <div>
+                                            @residence.City
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <small class="text-muted">
+                                            State
+                                        </small>
+                                        <div>
+                                            @residence.State
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <small class="text-muted">
+                                            Move-in Date
+                                        </small>
+                                        <div>
+                                            @residence.MoveInDate.ToString("MMM dd, yyyy")
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <small class="text-muted">
+                                            Move-out Date
+                                        </small>
+                                        <div>
+                                            @residence.MoveOutDate?.ToString("MMM dd, yyyy")
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <p class="text-muted">
+                            No residence history was provided.
+                        </p>
+                    }
+
+
+                    <!-- Footer -->
+                    <div class="border-top pt-4 mt-4 text-center">
+
+                        <p class="text-muted mb-4">
+                            Thank you for completing your rental application.
+                            We appreciate your interest.
+                        </p>
+
+                        <a asp-controller="Home" asp-action="Index" class="btn btn-primary">
+
+                            <i class="bi bi-house me-1"></i>
+                            Back to Home
+
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

@@ -33,14 +33,20 @@ $(document).ready(function () {
           $("<div>").text(`${r.City}, ${r.State} ${r.ZipCode}`),
           $("<button>", {
             type: "button",
-            class: "btn btn-sm btn-primary edit-residence",
+            class: "btn btn-sm btn-primary btn-edit-residence",
             text: "Edit",
-          }).attr("data-index", i),
+          })
+            .attr("data-index", i)
+            .attr("data-bs-toggle", "modal")
+            .attr("data-bs-target", "#residenceModal"),
           $("<button>", {
             type: "button",
-            class: "btn btn-sm btn-danger delete-residence",
+            class: "btn btn-sm btn-danger btn-delete-residence",
             text: "Delete",
-          }).attr("data-index", i),
+          })
+            .attr("data-index", i)
+            .attr("data-bs-toggle", "modal")
+            .attr("data-bs-target", "#residenceModal"),
         )
         .appendTo($card);
 
@@ -56,16 +62,31 @@ $(document).ready(function () {
     });
   }
 
+  $("#addResidenceBtn").on("click", function () {
+    $("#residenceModalTitle").text("Add Previous Residence");
+
+    $("#ResidenceHistoryIndex").val("");
+    $("#resAddress").val("");
+    $("#resCity").val("");
+    $("#resState").val("");
+    $("#resZipCode").val("");
+    $("#resMoveInDate").val("");
+    $("#resMoveOutDate").val("");
+    $("#resLandlordName").val("");
+    $("#resLandlordPhone").val("");
+  });
+
   $("#saveResidenceBtn").on("click", async function () {
-    const form = document.getElementById("residenceForm");
+    debugger;
+    const form = document.getElementById("applicationForm");
 
     // Validate required fields
     if (!form.reportValidity()) {
       return;
     }
 
-    const moveIn = $("#MoveInDate").val();
-    const moveOut = $("#MoveOutDate").val();
+    const moveIn = $("#resMoveInDate").val();
+    const moveOut = $("#resMoveOutDate").val();
 
     if (moveOut && moveOut < moveIn) {
       alert("Move-out date must be on or after move-in date.");
@@ -75,15 +96,15 @@ $(document).ready(function () {
     // Collect modal values
     const residence = {
       ResidenceHistoryId: Number($("#ResidenceHistoryId").val()) || 0,
-      ApplicantId: Number($("#ApplicantId").val()) || 0,
-      Address: $("#Address").val().trim(),
-      City: $("#City").val().trim(),
-      State: $("#State").val().trim(),
-      ZipCode: $("#ZipCode").val().trim(),
+      ApplicantId: Number($("#resApplicantId").val()) || 0,
+      Address: $("#resAddress").val().trim(),
+      City: $("#resCity").val().trim(),
+      State: $("#resState").val().trim(),
+      ZipCode: $("#resZipCode").val().trim(),
       MoveInDate: moveIn,
       MoveOutDate: moveOut || null,
-      LandlordName: $("#LandlordName").val().trim(),
-      LandlordPhone: $("#LandlordPhone").val().trim(),
+      LandlordName: $("#resLandlordName").val().trim(),
+      LandlordPhone: $("#resLandlordPhone").val().trim(),
     };
 
     const index = $("#ResidenceHistoryIndex").val();
@@ -102,7 +123,25 @@ $(document).ready(function () {
     ).hide();
 
     // Reset modal fields
-    form.reset();
+    //form.reset();
     $("#ResidenceHistoryIndex").val("");
+  });
+
+  $(document).on("click", ".btn-edit-residence", async function () {
+    const index = $(this).data("index");
+
+    $("#residenceModalTitle").text("Edit Previous Residence");
+
+    // Set modal fields
+    var residence = residences[index];
+    $("#ResidenceHistoryIndex").val(index);
+    $("#resAddress").val(residence.Address);
+    $("#resCity").val(residence.City);
+    $("#resState").val(residence.State);
+    $("#resZipCode").val(residence.ZipCode);
+    $("#resMoveInDate").val(String(residence.MoveInDate).split("T")[0]);
+    $("#resMoveOutDate").val(String(residence.MoveOutDate).split("T")[0]);
+    $("#resLandlordName").val(residence.LandlordName);
+    $("#resLandlordPhone").val(residence.LandlordPhone);
   });
 });

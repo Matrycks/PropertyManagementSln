@@ -1,0 +1,174 @@
+@model RentalApplicationListViewModel
+
+@{
+    ViewData["Title"] = "Rental Applications";
+
+    var selectedPropertyId = Context.Request.Query["rentalPropertyId"].ToString();
+    var selectedStatus = Context.Request.Query["status"].ToString();
+}
+
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="mb-1">Rental Applications</h2>
+            <p class="text-muted mb-0">
+                View and manage rental applications.
+            </p>
+        </div>
+
+        <span class="badge bg-secondary rounded-pill">
+            @Model.Applications.Count() applications
+        </span>
+    </div>
+
+    <!-- Filters -->
+    <div class="card border-0 shadow-sm mb-4">
+        <div class="card-body">
+            <form method="get" asp-action="List">
+                <div class="row g-3 align-items-end">
+
+                    <div class="col-md-5">
+                        <label for="rentalPropertyId" class="form-label">
+                            Property
+                        </label>
+
+                        <select id="rentalPropertyId" name="rentalPropertyId" class="form-select">
+                            <option value="">All properties</option>
+
+                            @foreach (var property in Model.Properties)
+                            {
+                                <option value="@property.RentalPropertyId"
+                                        selected="@(selectedPropertyId == property.RentalPropertyId.ToString())">
+                                    @property.Name
+                                </option>
+                            }
+                        </select>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label for="status" class="form-label">
+                            Application Status
+                        </label>
+
+                        <select id="status" name="status" class="form-select">
+                            <option value="">All statuses</option>
+
+                            @foreach (ApplicationStatus status
+                                in Enum.GetValues<ApplicationStatus>())
+                            {
+                                <option value="@status" selected="@(selectedStatus == status.ToString())">
+                                    @status
+                                </option>
+                            }
+                        </select>
+                    </div>
+
+                    <div class="col-md-3 d-flex gap-2">
+                        <button type="submit" class="btn btn-primary flex-grow-1">
+                            <i class="bi bi-funnel"></i> Filter
+                        </button>
+
+                        <a asp-action="Index" class="btn btn-outline-secondary">
+                            Clear
+                        </a>
+                    </div>
+
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Applications table -->
+    <div class="card border-0 shadow-sm">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th class="ps-3">Application</th>
+                        <th>Property</th>
+                        <th>Applicant</th>
+                        <th>Status</th>
+                        <th class="text-end pe-3">Actions</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @if (!Model.Applications.Any())
+                    {
+                        <tr>
+                            <td colspan="5" class="text-center text-muted py-5">
+                                No applications match your filters.
+                            </td>
+                        </tr>
+                    }
+                    else
+                    {
+                        @foreach (var application in Model.Applications)
+                        {
+                            var statusClass = application.Status switch
+                            {
+                                ApplicationStatus.Draft =>
+                                    "bg-secondary",
+                                ApplicationStatus.Submitted =>
+                                    "bg-primary",
+                                ApplicationStatus.Returned =>
+                                    "bg-warning text-dark",
+                                ApplicationStatus.Approved =>
+                                    "bg-success",
+                                ApplicationStatus.Denied =>
+                                    "bg-danger",
+                                ApplicationStatus.Withdrawn =>
+                                    "bg-dark",
+                                _ => "bg-light text-dark"
+                            };
+
+                            <tr>
+                                <td class="ps-3">
+                                    <span class="fw-semibold">
+                                        #@application.RentalApplicationId
+                                    </span>
+                                </td>
+
+                                <td>
+                                    <div class="fw-medium">
+                                        @application.RentalProperty?.Name
+                                    </div>
+                                </td>
+
+                                <td>
+                                    @application.FirstName
+                                    @application.LastName
+                                </td>
+
+                                <td>
+                                    <span class="badge @statusClass">
+                                        @application.Status
+                                    </span>
+                                </td>
+
+                                <td class="text-end pe-3">
+                                    <div class="d-inline-flex gap-2">
+                                        <a asp-action="Details" asp-route-id="@application.RentalApplicationId"
+                                           class="btn btn-sm btn-outline-primary">
+                                            View
+                                        </a>
+
+                                        <form asp-action="Delete" asp-route-id="@application.RentalApplicationId" method="post"
+                                              onsubmit="return confirm('Delete this rental application?');">
+
+                                            @Html.AntiForgeryToken()
+
+                                            <button type="submit" class="btn btn-sm btn-outline-danger">
+                                                Delete
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

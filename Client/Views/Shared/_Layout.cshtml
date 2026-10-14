@@ -70,17 +70,17 @@
                                             Account
                                         </a>
                                     </li>
+                                    <li>
+                                        <a class="dropdown-item" asp-area="" asp-controller="RentalApplication" asp-action="List">
+                                            Applications
+                                        </a>
+                                    </li>
                                     @if (User.IsInRole(role: "Manager"))
                                     {
                                         <!-- Manager Dropdown -->
                                         <li>
                                             <a class="dropdown-item" asp-area="" asp-controller="RentalProperty" asp-action="RentalProperties">
                                                 Properties
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a class="dropdown-item" asp-area="" asp-controller="RentalApplication" asp-action="Applications">
-                                                Applications
                                             </a>
                                         </li>
                                     }

@@ -15,25 +15,69 @@ namespace Client.Controllers;
 /// Controller for managing rental applications. This controller is responsible for handling requests related to rental applications, 
 /// including displaying the application form, processing submissions, and managing application data.
 /// </summary>
-[Authorize(Roles = "Manager")]
 public class RentalApplicationController : Controller
 {
     private readonly ILogger<RentalApplicationController> _logger;
+    private readonly IRentalPropertyService _rentalPropertyService;
     private readonly IRentalApplicationService _rentalApplicationService;
     private readonly IMapper _mapper;
     private readonly UserManager<ApplicationUser> _userManager;
 
     public RentalApplicationController(ILogger<RentalApplicationController> logger,
-        IRentalApplicationService rentalApplicationService, IMapper mapper, UserManager<ApplicationUser> userManager)
+        IRentalApplicationService rentalApplicationService, IRentalPropertyService rentalPropertyService,
+        IMapper mapper, UserManager<ApplicationUser> userManager)
     {
         _logger = logger;
         _rentalApplicationService = rentalApplicationService;
+        _rentalPropertyService = rentalPropertyService;
         _mapper = mapper;
         _userManager = userManager;
     }
 
-    public async Task<IActionResult> Index(int rentalUnitId)
+    public async Task<IActionResult> List(int? rentalPropertyId = null, ApplicationStatus? status = null)
     {
+        try
+        {
+            var currentUser = await _userManager.GetUserAsync(User);
+
+            if (currentUser == null)
+            {
+                // Redirects to the login page if the user is not authenticated
+                return Challenge();
+            }
+
+            var isManager = User.IsInRole("Manager");
+
+            var properties = await _rentalPropertyService.GetAllPropertiesAsync();
+            IEnumerable<RentalApplicationModel> applications = [];
+
+            if (!isManager)
+                applications = await _rentalApplicationService.GetAllUserApplicationsAsync(currentUser.Id,
+                    rentalPropertyId, status);
+            else
+                applications = await _rentalApplicationService.GetAllApplicationsAsync(rentalPropertyId, status);
+
+            return View("RentalApplications", new RentalApplicationListViewModel
+            {
+                Applications = applications,
+                PropertyId = rentalPropertyId,
+                Properties = properties,
+                Status = status
+            });
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error retieving rental applications.");
+            return View("Error");
+        }
+    }
+
+
+    [Authorize(Roles = "User")]
+    public async Task<IActionResult> Index(int rentalPropertyId = 1, int rentalUnitId = 1)
+    {
+        // NOTE: Property and Unit Id's are hardcoded for now due to incorrect UI design
+        // TODO: Redo UI workflow
         var currentUser = await _userManager.GetUserAsync(User);
 
         if (currentUser == null)
@@ -42,16 +86,15 @@ public class RentalApplicationController : Controller
             return Challenge();
         }
 
-        var applicant = _mapper.Map<ApplicantModel>(currentUser);
-        applicant.UserId = currentUser.Id;
+        var application = _mapper.Map<RentalApplicationModel>(currentUser); // Map User fields
+        application.UserId = currentUser.Id;
+        application.RentalPropertyId = rentalPropertyId;
+        application.RentalUnitId = rentalUnitId;
 
-        return View(new RentalApplicationModel
-        {
-            RentalUnitId = rentalUnitId,
-            Applicant = applicant
-        });
+        return View(application);
     }
 
+    [Authorize(Roles = "User")]
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Index(RentalApplicationModel model, string action)
@@ -77,10 +120,13 @@ public class RentalApplicationController : Controller
                     ModelState.Clear();
                     return View(model);
                 case "submit":
-                    // Save the application to the database
-                    //await _rentalApplicationService.CreateApplicationAsync(model);
+                    // TODO: add Rental Unit selection to application process
+                    model.RentalUnitId = 1;
 
-                    return RedirectToAction("Confirmation");
+                    // Save the application to the database
+                    var newRentalApplicationId = await _rentalApplicationService.CreateApplicationAsync(model);
+
+                    return RedirectToAction("Completed", new { rentalApplicationId = newRentalApplicationId });
                 default:
                     return BadRequest();
             }
@@ -91,6 +137,26 @@ public class RentalApplicationController : Controller
             TempData["Error"] = "Error processing application.";
 
             return BadRequest();
+        }
+    }
+
+    [Authorize(Roles = "User")]
+    public async Task<IActionResult> Completed(int rentalApplicationId)
+    {
+        try
+        {
+            var application = await _rentalApplicationService.GetApplicationByIdAsync(rentalApplicationId);
+            if (application == null)
+            {
+                return NotFound();
+            }
+
+            return View(application);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error retrieving rental application.");
+            return View("Error");
         }
     }
 

@@ -22,55 +22,6 @@ namespace Client.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("Client.Data.Entities.Applicant", b =>
-                {
-                    b.Property<int>("ApplicantId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ApplicantId"));
-
-                    b.Property<string>("Address")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("City")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("DateOfBirth")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("FirstName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("LastName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PhoneNumber")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("State")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ZipCode")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("ApplicantId");
-
-                    b.ToTable("Applicant");
-                });
-
             modelBuilder.Entity("Client.Data.Entities.ApplicationUser", b =>
                 {
                     b.Property<string>("Id")
@@ -182,15 +133,58 @@ namespace Client.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("RentalApplicationId"));
 
-                    b.Property<int>("ApplicantId")
+                    b.Property<string>("Address")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("City")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("DateOfBirth")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PhoneNumber")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("RentalPropertyId")
                         .HasColumnType("int");
 
                     b.Property<int>("RentalUnitId")
                         .HasColumnType("int");
 
+                    b.Property<string>("State")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ZipCode")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("RentalApplicationId");
 
-                    b.HasIndex("ApplicantId");
+                    b.HasIndex("RentalPropertyId");
 
                     b.HasIndex("RentalUnitId");
 
@@ -282,19 +276,14 @@ namespace Client.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("ApplicantId")
-                        .HasColumnType("int");
-
                     b.Property<string>("City")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("LandlordName")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("LandlordPhone")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("MoveInDate")
@@ -303,7 +292,14 @@ namespace Client.Migrations
                     b.Property<DateTime>("MoveOutDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<int?>("RentalApplicationId")
+                        .HasColumnType("int");
+
                     b.Property<string>("State")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -313,7 +309,7 @@ namespace Client.Migrations
 
                     b.HasKey("ResidenceHistoryId");
 
-                    b.HasIndex("ApplicantId");
+                    b.HasIndex("RentalApplicationId");
 
                     b.ToTable("ResidenceHistory");
                 });
@@ -457,10 +453,10 @@ namespace Client.Migrations
 
             modelBuilder.Entity("Client.Data.Entities.RentalApplication", b =>
                 {
-                    b.HasOne("Client.Data.Entities.Applicant", "Applicant")
+                    b.HasOne("Client.Data.Entities.RentalProperty", "RentalProperty")
                         .WithMany()
-                        .HasForeignKey("ApplicantId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .HasForeignKey("RentalPropertyId")
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("Client.Data.Entities.RentalUnit", "RentalUnit")
@@ -469,7 +465,7 @@ namespace Client.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Applicant");
+                    b.Navigation("RentalProperty");
 
                     b.Navigation("RentalUnit");
                 });
@@ -495,13 +491,9 @@ namespace Client.Migrations
 
             modelBuilder.Entity("Client.Data.Entities.ResidenceHistory", b =>
                 {
-                    b.HasOne("Client.Data.Entities.Applicant", "Applicant")
-                        .WithMany()
-                        .HasForeignKey("ApplicantId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Applicant");
+                    b.HasOne("Client.Data.Entities.RentalApplication", null)
+                        .WithMany("ResidenceHistory")
+                        .HasForeignKey("RentalApplicationId");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -553,6 +545,11 @@ namespace Client.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Client.Data.Entities.RentalApplication", b =>
+                {
+                    b.Navigation("ResidenceHistory");
                 });
 
             modelBuilder.Entity("Client.Data.Entities.RentalProperty", b =>

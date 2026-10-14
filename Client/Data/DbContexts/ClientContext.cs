@@ -33,6 +33,12 @@ namespace Client.Data.DbContexts
             modelBuilder.Entity<RentalUnit>()
             .Property(f => f.Rent)
             .HasPrecision(18, 2);
+
+            modelBuilder.Entity<RentalApplication>()
+            .HasOne(a => a.RentalProperty)
+            .WithMany()
+            .HasForeignKey(a => a.RentalPropertyId)
+            .OnDelete(DeleteBehavior.NoAction);
         }
     }
 }

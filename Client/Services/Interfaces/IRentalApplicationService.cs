@@ -8,9 +8,12 @@ namespace Client.Services.Interfaces
 {
     public interface IRentalApplicationService
     {
-        Task<IEnumerable<RentalApplicationModel>> GetAllApplicationsAsync();
+        Task<IEnumerable<RentalApplicationModel>> GetAllUserApplicationsAsync(string userId, int? rentalPropertyId = null,
+            ApplicationStatus? applicationStatus = null);
+        Task<IEnumerable<RentalApplicationModel>> GetAllApplicationsAsync(int? rentalPropertyId = null,
+            ApplicationStatus? applicationStatus = null);
         Task<RentalApplicationModel?> GetApplicationByIdAsync(int id);
-        Task CreateApplicationAsync(RentalApplicationModel application);
+        Task<int> CreateApplicationAsync(RentalApplicationModel application);
         Task UpdateApplicationAsync(RentalApplicationModel application);
         Task DeleteApplicationAsync(int id);
     }

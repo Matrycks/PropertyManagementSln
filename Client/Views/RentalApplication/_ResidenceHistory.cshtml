@@ -25,18 +25,20 @@
                 <strong>@Model[i].Address</strong>
                 <div>@Model[i].City, @Model[i].State @Model[i].ZipCode</div>
 
-                <button type="button" class="btn btn-sm btn-primary edit-residence">
+                <button type="button" class="btn btn-sm btn-primary btn-edit-residence" data-bs-toggle="modal"
+                        data-bs-target="#residenceModal" data-index="@i">
                     Edit
                 </button>
 
-                <button type="button" class="btn btn-sm btn-danger delete-residence">
+                <button type="button" class="btn btn-sm btn-danger btn-delete-residence">
                     Delete
                 </button>
             </div>
 
+            <!-- Hidden form fields -->
             <input type="hidden" name="ResidenceHistory[@i].ResidenceHistoryId" value="@Model[i].ResidenceHistoryId" />
 
-            <input type="hidden" name="ResidenceHistory[@i].ApplicantId" value="@Model[i].ApplicantId" />
+            <input type="hidden" name="ResidenceHistory[@i].UserId" value="@Model[i].UserId" />
 
             <input type="hidden" name="ResidenceHistory[@i].Address" value="@Model[i].Address" />
 
@@ -82,6 +84,7 @@
 
                 <div class="modal-body">
                     <input type="hidden" id="ResidenceHistoryId" name="ResidenceHistoryId" value="0" />
+                    <input type="hidden" id="ResidenceHistoryIndex" name="ResidenceHistoryIndex" value="" />
 
                     <input type="hidden" id="ApplicantId" name="ApplicantId" value="" />
 
@@ -89,53 +92,54 @@
 
                     <div class="row g-3">
                         <div class="col-12">
-                            <label for="Address" class="form-label">Address</label>
-                            <input id="Address" name="Address" class="form-control" required maxlength="200" />
-                            <span class="text-danger" data-error-for="Address"></span>
+                            <label for="resAddress" class="form-label">Address</label>
+                            <input id="resAddress" name="resAddress" class="form-control" required maxlength="200" />
+                            <span class="text-danger" data-error-for="resAddress"></span>
                         </div>
 
                         <div class="col-md-6">
-                            <label for="City" class="form-label">City</label>
-                            <input id="City" name="City" class="form-control" required maxlength="100" />
-                            <span class="text-danger" data-error-for="City"></span>
+                            <label for="resCity" class="form-label">City</label>
+                            <input id="resCity" name="resCity" class="form-control" required maxlength="100" />
+                            <span class="text-danger" data-error-for="resCity"></span>
                         </div>
 
                         <div class="col-md-3">
-                            <label for="State" class="form-label">State</label>
-                            <input id="State" name="State" class="form-control" required maxlength="2" />
-                            <span class="text-danger" data-error-for="State"></span>
+                            <label for="resState" class="form-label">State</label>
+                            <input id="resState" name="resState" class="form-control" required maxlength="2" />
+                            <span class="text-danger" data-error-for="resState"></span>
                         </div>
 
                         <div class="col-md-3">
-                            <label for="ZipCode" class="form-label">ZIP Code</label>
-                            <input id="ZipCode" name="ZipCode" class="form-control" required
+                            <label for="resZipCode" class="form-label">ZIP Code</label>
+                            <input id="resZipCode" name="resZipCode" class="form-control" required
                                    pattern="[0-9]{5}(-[0-9]{4})?" />
-                            <span class="text-danger" data-error-for="ZipCode"></span>
+                            <span class="text-danger" data-error-for="resZipCode"></span>
                         </div>
 
                         <div class="col-md-6">
-                            <label for="MoveInDate" class="form-label">Move-in Date</label>
-                            <input id="MoveInDate" name="MoveInDate" type="date" class="form-control" required />
-                            <span class="text-danger" data-error-for="MoveInDate"></span>
+                            <label for="resMoveInDate" class="form-label">Move-in Date</label>
+                            <input id="resMoveInDate" name="resMoveInDate" type="date" class="form-control" required />
+                            <span class="text-danger" data-error-for="resMoveInDate"></span>
                         </div>
 
                         <div class="col-md-6">
-                            <label for="MoveOutDate" class="form-label">Move-out Date</label>
-                            <input id="MoveOutDate" name="MoveOutDate" type="date" class="form-control" />
-                            <span class="text-danger" data-error-for="MoveOutDate"></span>
+                            <label for="resMoveOutDate" class="form-label">Move-out Date</label>
+                            <input id="resMoveOutDate" name="resMoveOutDate" type="date" class="form-control" />
+                            <span class="text-danger" data-error-for="resMoveOutDate"></span>
                         </div>
 
                         <div class="col-md-6">
-                            <label for="LandlordName" class="form-label">Landlord Name</label>
-                            <input id="LandlordName" name="LandlordName" class="form-control" required
+                            <label for="resLandlordName" class="form-label">Landlord Name</label>
+                            <input id="resLandlordName" name="resLandlordName" class="form-control" required
                                    maxlength="150" />
-                            <span class="text-danger" data-error-for="LandlordName"></span>
+                            <span class="text-danger" data-error-for="resLandlordName"></span>
                         </div>
 
                         <div class="col-md-6">
-                            <label for="LandlordPhone" class="form-label">Landlord Phone</label>
-                            <input id="LandlordPhone" name="LandlordPhone" type="tel" class="form-control" required />
-                            <span class="text-danger" data-error-for="LandlordPhone"></span>
+                            <label for="resLandlordPhone" class="form-label">Landlord Phone</label>
+                            <input id="resLandlordPhone" name="resLandlordPhone" type="tel" class="form-control"
+                                   required />
+                            <span class="text-danger" data-error-for="resLandlordPhone"></span>
                         </div>
                     </div>
                 </div>

@@ -83,7 +83,7 @@ $(document).ready(function () {
     });
   });
 
-  $("#editUnitBtn").on("click", async function () {
+  $(document).on("click", ".btn-edit-unit", async function () {
     const $button = $(this);
     const unitId = $button.data("id");
 
